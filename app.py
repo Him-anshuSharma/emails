@@ -4,6 +4,14 @@ from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from bs4 import BeautifulSoup
+from flask import render_template
+
+app = Flask(__name__)
+
+@app.route('/')
+def index():
+    return render_template('index.html')
+
 
 app = Flask(__name__)
 
@@ -47,7 +55,7 @@ def get_email_data(service, user_id, msg_id):
     return {'subject': message['snippet'], 'body': body_text, 'date': date}
 
 
-@app.route('/', methods=['GET'])
+@app.route('/emails', methods=['GET'])
 def get_emails():
     # Get the Gmail service
     service = get_gmail_service()
