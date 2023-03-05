@@ -47,7 +47,7 @@ def get_email_data(service, user_id, msg_id):
     return {'subject': message['snippet'], 'body': body_text, 'date': date}
 
 
-@app.route('/emails', methods=['GET'])
+@app.route('/', methods=['GET'])
 def get_emails():
     # Get the Gmail service
     service = get_gmail_service()
