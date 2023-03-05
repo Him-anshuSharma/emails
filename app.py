@@ -1,17 +1,9 @@
-from flask import Flask, jsonify
+from flask import Flask, jsonify, render_template
 import base64
 from google.oauth2.credentials import Credentials
 from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from bs4 import BeautifulSoup
-from flask import render_template
-
-app = Flask(__name__)
-
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 
 app = Flask(__name__)
 
@@ -51,8 +43,10 @@ def get_email_data(service, user_id, msg_id):
             ).decode('UTF-8')
     soup = BeautifulSoup(data, 'html.parser')
     date = message['internalDate']
-    body_text = soup.get_text().replace('\\', '').replace(' ', '')
+    # Extract only the plain text from the email body
+    body_text = soup.get_text()
     return {'subject': message['snippet'], 'body': body_text, 'date': date}
+
 
 
 @app.route('/emails', methods=['GET'])
@@ -64,8 +58,8 @@ def get_emails():
     messages = service.users().messages().list(userId='me', maxResults=5).execute().get('messages', [])
     email_data = [get_email_data(service, 'me', message['id']) for message in messages]
 
-    # Return the email data as JSON
-    return jsonify(email_data)
+    # Render the email data in an HTML template
+    return render_template('emails.html', emails=email_data)
 
 
 if __name__ == '__main__':

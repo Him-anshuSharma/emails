@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Emails</title>
+</head>
+<body>
+    <h1>Emails</h1>
+    {% for email in emails %}
+        <h2>{{ email.subject }}</h2>
+        <p>{{ email.body }}</p>
+        <p>{{ email.date }}</p>
+    {% endfor %}
+</body>
+</html>
